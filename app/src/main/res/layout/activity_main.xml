@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:context="com.example.svg.MainActivity"
+    android:orientation="vertical">
+
+    <TextView
+        android:text="Svg path:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView"
+        android:layout_weight="1"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textMultiLine"
+        android:ems="10"
+        android:id="@+id/pathedit"
+        android:layout_weight="1"
+        android:text="M50,50 Q-30,100 50,150 100,230 150,150 230,100 150,50 100,-30 50,50"/>
+
+    <Button
+        android:text="Draw!"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/button"
+        android:layout_weight="1"/>
+</LinearLayout>
