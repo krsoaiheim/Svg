@@ -53,7 +53,7 @@ public class DrawView extends View {
         svg = svg.replaceAll(",", " ");
         svg = svg.replaceAll("([a-zA-z])", " $1 ");
         svg = svg.trim().replaceAll("\\s{2,}", " ");
-        String[] svgCommands = svg.split("(?=[MHVCZQLSTmhvczqlst])");
+        String[] svgCommands = svg.split("(?=[MHVCZQALSTmhavczqlst])");
         for (int i = 0; i < svgCommands.length; i++) {
             list.add(new ArrayList(Arrays.asList(svgCommands[i].split(" "))));
         }
@@ -155,7 +155,15 @@ public class DrawView extends View {
         return path;
     }
 
-
+    /**
+     *
+     * @param path - объект Path
+     * @param list - команда
+     * @param point - текущая точка
+     * @param reflect - контрльная точка послдней линии
+     * @param relative - относительные или абсолютные координаты
+     * @return
+     */
     public Path svgSCubicTo(Path path, List<String> list, Float[] point, Float[] reflect, boolean relative) {
         //выподнение команд S,s
         int iteration = 0;
@@ -163,20 +171,25 @@ public class DrawView extends View {
         afterReflection[0] = point[0] - (reflect[0] - point[0]); //абсолютные координаты первой
         // контрольной точки
         afterReflection[1] = point[1] - (reflect[1] - point[1]);
+        float x2=Float.parseFloat(list.get(1 + 4 * iteration));
+        float y2=Float.parseFloat(list.get(2 + 4 * iteration));
+        float x=Float.parseFloat(list.get(3 + 4 * iteration));
+        float y=Float.parseFloat(list.get(4 + 4 * iteration));
         while (!(list.size() < iteration * 4 + 4)) {
             if (relative) {
-                path.rCubicTo(afterReflection[0] - point[0], afterReflection[1] - point[1], Float.parseFloat(list.get(1 + 4 * iteration)), Float.parseFloat(list.get(2 + 4 * iteration)), Float.parseFloat(list.get(3 + 4 * iteration)), Float.parseFloat(list.get(4 + 4 * iteration)));
-                reflect[0] = point[0] + Float.parseFloat(list.get(1 + 4 * iteration));
-                reflect[1] = point[1] + Float.parseFloat(list.get(2 + 4 * iteration));
-                point[0] += Float.parseFloat(list.get(3 + 4 * iteration));
-                point[1] += Float.parseFloat(list.get(4 + 4 * iteration));
+                path.rCubicTo(afterReflection[0] - point[0], afterReflection[1] - point[1],
+                    x2,y2,x,y);
+                reflect[0] = point[0] + x2;
+                reflect[1] = point[1] + y2;
+                point[0] += x;
+                point[1] += y;
             }
             else {
-                path.cubicTo(afterReflection[0], afterReflection[1], Float.parseFloat(list.get(1 + 4 * iteration)), Float.parseFloat(list.get(2 + 4 * iteration)), Float.parseFloat(list.get(3 + 4 * iteration)), Float.parseFloat(list.get(4 + 4 * iteration)));
-                reflect[0] = Float.parseFloat(list.get(1 + 4 * iteration));
-                reflect[1] = Float.parseFloat(list.get(2 + 4 * iteration));
-                point[0] = Float.parseFloat(list.get(3 + 4 * iteration));
-                point[1] = Float.parseFloat(list.get(4 + 4 * iteration));
+                path.cubicTo(afterReflection[0], afterReflection[1], x2,y2,x,y);
+                reflect[0] = x2;
+                reflect[1] = y2;
+                point[0] = x;
+                point[1] = y;
             }
             iteration++;
         }
@@ -185,20 +198,26 @@ public class DrawView extends View {
     public Path svgCubicTo(Path path, List<String> list, Float[] point, Float[] reflect, boolean relative) {
         //команды C,c - кубическая кривая Безье
         int iteration = 0;
+        float x1=Float.parseFloat(list.get(1 + 6 * iteration));
+        float y1=Float.parseFloat(list.get(2 + 6 * iteration));
+        float x2=Float.parseFloat(list.get(3 + 6 * iteration));
+        float y2=Float.parseFloat(list.get(4 + 6 * iteration));
+        float x=Float.parseFloat(list.get(5 + 6 * iteration));
+        float y=Float.parseFloat(list.get(6 + 6 * iteration));
         while (!(list.size() < iteration * 6 + 6)) {
             if (relative) {
-                path.rCubicTo(Float.parseFloat(list.get(1 + 6 * iteration)), Float.parseFloat(list.get(2 + 6 * iteration)), Float.parseFloat(list.get(3 + 6 * iteration)), Float.parseFloat(list.get(4 + 6 * iteration)), Float.parseFloat(list.get(5 + 6 * iteration)), Float.parseFloat(list.get(6 + 6 * iteration)));
-                reflect[0] = point[0] + Float.parseFloat(list.get(3 + 6 * iteration));
-                reflect[1] = point[1] + Float.parseFloat(list.get(4 + 6 * iteration));
-                point[0] += Float.parseFloat(list.get(5 + 6 * iteration));
-                point[1] += Float.parseFloat(list.get(6 + 6 * iteration));
+                path.rCubicTo(x1,y1,x2,y2,x,y);
+                reflect[0] = point[0] + x2;
+                reflect[1] = point[1] + y2;
+                point[0] += x;
+                point[1] += y;
             }
             else {
-                path.cubicTo(Float.parseFloat(list.get(1 + 6 * iteration)), Float.parseFloat(list.get(2 + 6 * iteration)), Float.parseFloat(list.get(3 + 6 * iteration)), Float.parseFloat(list.get(4 + 6 * iteration)), Float.parseFloat(list.get(5 + 6 * iteration)), Float.parseFloat(list.get(6 + 6 * iteration)));
-                reflect[0] = Float.parseFloat(list.get(3 + 6 * iteration));
-                reflect[1] = Float.parseFloat(list.get(4 + 6 * iteration));
-                point[0] = Float.parseFloat(list.get(5 + 6 * iteration));
-                point[1] = Float.parseFloat(list.get(6 + 6 * iteration));
+                path.cubicTo(x1,y1,x2,y2,x,y);
+                reflect[0] = x2;
+                reflect[1] = y2;
+                point[0] = x;
+                point[1] = y;
             }
             iteration++;
         }
@@ -207,20 +226,24 @@ public class DrawView extends View {
     public Path svgQuadTo(Path path, List<String> list, Float[] point, Float[] reflect, boolean relative) {
         //команды Q,q - квадратичная кривая Безье
         int iteration = 0;
+        float x2=Float.parseFloat(list.get(1 + 4 * iteration));
+        float y2=Float.parseFloat(list.get(2 + 4 * iteration));
+        float x=Float.parseFloat(list.get(3 + 4 * iteration));
+        float y=Float.parseFloat(list.get(4 + 4 * iteration));
         while (!(list.size() < iteration * 4 + 4)) {
             if (relative) {
-                path.rQuadTo(Float.parseFloat(list.get(1 + 4 * iteration)), Float.parseFloat(list.get(2 + 4 * iteration)), Float.parseFloat(list.get(3 + 4 * iteration)), Float.parseFloat(list.get(4 + 4 * iteration)));
-                reflect[0] = point[0] + Float.parseFloat(list.get(1 + 4 * iteration));
-                reflect[1] = point[1] + Float.parseFloat(list.get(2 + 4 * iteration));
-                point[0] += Float.parseFloat(list.get(3 + 4 * iteration));
-                point[1] += Float.parseFloat(list.get(4 + 4 * iteration));
+                path.rQuadTo(x2,y2,x,y);
+                reflect[0] = point[0] + x2;
+                reflect[1] = point[1] + y2;
+                point[0] += x;
+                point[1] += y;
             }
             else {
-                path.quadTo(Float.parseFloat(list.get(1 + 4 * iteration)), Float.parseFloat(list.get(2 + 4 * iteration)), Float.parseFloat(list.get(3 + 4 * iteration)), Float.parseFloat(list.get(4 + 4 * iteration)));
-                reflect[0] = Float.parseFloat(list.get(1 + 4 * iteration));
-                reflect[1] = Float.parseFloat(list.get(2 + 4 * iteration));
-                point[0] = Float.parseFloat(list.get(3 + 4 * iteration));
-                point[1] = Float.parseFloat(list.get(4 + 4 * iteration));
+                path.quadTo(x2,y2,x,y);
+                reflect[0] = x2;
+                reflect[1] = y2;
+                point[0] = x;
+                point[1] = y;
             }
             iteration++;
         }
@@ -232,20 +255,22 @@ public class DrawView extends View {
         Float[] afterReflection = new Float[2];
         afterReflection[0] = point[0] - (reflect[0] - point[0]);
         afterReflection[1] = point[1] - (reflect[1] - point[1]);
+        float x=Float.parseFloat(list.get(1 + 2* iteration));
+        float y=Float.parseFloat(list.get(2 + 2 * iteration));
         while (!(list.size() < iteration * 2 + 2)) {
             if (relative) {
-                path.rQuadTo(afterReflection[0] - point[0], afterReflection[1] - point[1], Float.parseFloat(list.get(1 + 2 * iteration)), Float.parseFloat(list.get(2 + 2 * iteration)));
+                path.rQuadTo(afterReflection[0] - point[0], afterReflection[1] - point[1], x,y);
                 reflect[0] = afterReflection[0];
                 reflect[1] = afterReflection[1];
-                point[0] += Float.parseFloat(list.get(1 + 2 * iteration));
-                point[1] += Float.parseFloat(list.get(2 + 2 * iteration));
+                point[0] += x;
+                point[1] += y;
             }
             else {
-                path.quadTo(afterReflection[0], afterReflection[1], Float.parseFloat(list.get(1 + 2 * iteration)), Float.parseFloat(list.get(2 + 2 * iteration)));
+                path.quadTo(afterReflection[0], afterReflection[1], x,y);
                 reflect[0] = afterReflection[0];
                 reflect[1] = afterReflection[1];
-                point[0] = Float.parseFloat(list.get(1 + 2 * iteration));
-                point[1] = Float.parseFloat(list.get(2 + 2 * iteration));
+                point[0] = x;
+                point[1] = y;
             }
             iteration++;
         }
