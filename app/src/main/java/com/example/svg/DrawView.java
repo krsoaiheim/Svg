@@ -161,7 +161,6 @@ public class DrawView extends View {
      * @param point    - текущая точка
      * @param reflect  - контрльная точка послдней линии
      * @param relative - относительные или абсолютные координаты
-     * @return
      */
     public void svgSCubicTo(Path path, List<String> list, Float[] point, Float[] reflect, boolean
             relative) {
